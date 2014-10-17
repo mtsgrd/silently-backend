@@ -1,0 +1,60 @@
+# -*- coding: utf-8 -*-
+
+import logging
+from datetime import timedelta
+import os
+
+DEBUG = True
+SECRET_KEY = 'not_so_secret'
+TRAP_HTTP_EXCEPTIONS = False
+
+# API Keys
+GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+
+# Redis
+REDIS_URL = "redis://127.0.0.1:6379/0"
+
+# Celery
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+CELERY_RESULT_BACKEND = 'redis://127.0.0.1:6379/0'
+
+# Session
+SESSION_COOKIE_NAME = 'sil'
+SESSION_PROTECTION = None
+PERMANENT_SESSION_LIFETIME = timedelta(31)
+
+DEBUG_TB_PROFILER_ENABLED = False
+
+# Flask-Cache
+CACHE_ENABLED = True
+CACHE_TYPE = 'redis'
+CACHE_DEFAULT_TIMEOUT = 30 * 24 * 3600
+CACHE_REDIS_DB = 0
+
+
+LOG_LEVEL = logging.DEBUG
+
+WTF_CSRF_ENABLED = False
+WTF_CSRF_SSL_STRICT = False
+
+SMTP_FROM = ''
+SMTP_PORT = 465
+SMTP_FROM = ''
+SMTP_BUFFER_LENGTH = 1
+SMTP_PASSWORD = ""
+SMTP_SERVER = ""
+SMTP_USERNAME = ""
+
+ENABLE_ERROR_EMAIL = False
+ERROR_EMAIL_SUBJECT = ''
+ERROR_EMAIL_ADDRESS = ['']
+
+ADMIN_ROLE = 'group:admin'
+
+HTTP_MAX_AGE = 600
+
+JS_FILE = 'dev.js'
+CSS_FILE = 'dev.css'
+
+USE_COMPILED_JS = False
+REDIS_SOCKETIO_CHANNEL = 'socketio'

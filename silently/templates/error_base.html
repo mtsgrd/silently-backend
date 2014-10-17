@@ -1,0 +1,83 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="HandheldFriendly" content="true" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    {% block header %}>
+    {% endblock %}
+    <style>
+      @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,800);
+      .error_container {
+        color: #333;
+        font-family: 'Open Sans', Arial;
+        font-weight: lighter;
+        margin: auto;
+        width: 80%;
+      }
+      p {
+        padding: 0;
+        margin: 0;
+      }
+      .error_title {
+        color: #00ccff;
+        font-size: 56px;
+        margin: 60px 0 20px 0;
+      }
+      .error_description {
+        font-size: 30px;
+        letter-spacing: 2px;
+        margin: 0 0 10px 0;
+      }
+      .try_again {
+        font-size: 14px;
+        padding: 0 0 20px 0;
+        border-bottom: 1px solid #ccc;
+      }
+      .logo {
+        font-size: 200%;
+      }
+      .stack {
+        background-color: #eee;
+        margin: 1em 0 0 0;
+        padding: 1em;
+      }
+      .stack > div {
+          margin: 0 0 0.2em;
+      }
+      .line {
+          color: #999;
+      }
+      .function {
+          font-weight: bold;
+      }
+      .message {
+          margin: 1em 0 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="error_container">
+        {% block content %}>
+        {% endblock %}
+        {% if config.DEBUG %}
+        <div class='message'>
+            {{ err_message }}
+        </div>
+        <div class='stack'>
+            {% for item in err_stack %}
+            <div>
+                <code class='line'>...{{ item[0][-20:] }}:{{ item[1] }}</code>
+                <code class='function'>{{ item[2] }}</code>
+                <code class='text'>{{ item[3] }}</code>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+      {% block footer %}>
+      {% endblock %}
+  </body>
+</html>
+

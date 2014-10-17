@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0,
+                maximum-scale=1.0, user-scalable=no" />
+        <meta name="HandheldFriendly" content="true" />
+        <link rel="icon" type="image/png" href="/favicon.png" />
+        <link rel='stylesheet' href='css/dev.css' />
+        {% if config.USE_COMPILED_JS %}
+        {% else %}
+        <script src="/js/closure-library/closure/goog/base.js"></script>
+        <script src="/js/deps.js"></script>
+        <script>
+            goog.require('silently.Base');
+        </script>
+        {% endif %}
+        {% block header %}>
+        {% endblock %}
+    </head>
+    <body>
+        Loading javascript..
+        {% block content %}
+        {% endblock %}
+        {% block footer %}>
+        {% endblock %}
+        <script>
+            var CLOSURE_NO_DEPS = true;
+            var initSilently = function(debug) {
+                if (debug) {
+                    initSilently_();
+                } else {
+                    errorReporter = giflike.ErrorReporter.getInstance();
+                    errorReporter.protectEntryPoint(initSilently_)();
+                }
+            }
+            var initSilently_ = function() {
+                {% autoescape false %} 
+                {% endautoescape %} 
+                x = silently.Base.init("{{ config.GOOGLE_API_KEY }}", 0, 1);
+                // silently.setCSRFToken('{{ csrf_token() }}');
+                {% block script %}
+                {% endblock %}
+            };
+            {% if config.USE_COMPILED_JS %}
+            (function () {
+                var r = false;
+                var s = document.createElement('script');
+                s.type = 'text/javascript';
+                s.async = true;
+                s.src = '/public/js/prod.js';
+                s.onload = s.onreadystatechange = function() {
+                    if (!r && (!this.readyState || this.readyState == 'complete')) {
+                        r = true;
+                        initSilently(false);
+                    }
+                };
+                var x = document.getElementsByTagName('script')[0];
+                x.parentNode.insertBefore(s, x);
+            })();
+            {% else %}
+            initSilently(true);
+            {% endif %}
+        </script>
+    </body>
+</html>
