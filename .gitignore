@@ -1,2 +1,6 @@
 *.pyc
 venv
+Silently.egg-info
+build
+dist
+silently/frontend/static
