@@ -52,9 +52,9 @@ def socket_thread(f):
     It's necessary to copy the request context using the convenience method
     provided by the flask library.
     """
+    @wraps(f)
     def inner(*args, **kwargs):
         return gevent.spawn(copy_current_request_context(f), *args, **kwargs)
 
     # Wraps preservers function name and docstring of the decorated function.
-    @wraps(inner)
     return inner

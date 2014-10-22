@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from .. import factory, rooms
+from .. import factory
 from ..core import socketio
 from flask import request, current_app
 from flask_socketio import emit
 from ..routing import socket_route
 from flask_login import current_user
 from .ordrin import get_restaurants, get_details
-
-#from .ordrin import bp as ordrin_bp
 
 def create_app(static_url_path=None, settings_override=None):
     """Returns the Overholt API application instance"""
@@ -34,7 +32,3 @@ def list_restaurants(address):
     #for restaurant in restaurants:
     #    details = get_details(restaurant['id'])
     #    emit('restaurant_details', details)
-
-@socket_route('leave_room')
-def leave(self, room):
-    room = rooms.leave(room)

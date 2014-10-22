@@ -48,6 +48,9 @@ class AnonymousUser(AnonymousUser):
     users.
     """
 
+    def user_id(self):
+        return ''
+
     def is_admin(self):
         return False
 
