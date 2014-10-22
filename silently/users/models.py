@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from flask_security import UserMixin, RoleMixin
-
-from ..core import mongo_engine as db
-from flask_mongoengine.wtf import model_form
-from flask_security import AnonymousUser
-from flask import current_app
 import datetime
+
+from flask import current_app
+from flask_security import AnonymousUser, UserMixin, RoleMixin
+from flask_mongoengine.wtf import model_form
+from ..core import mongo_engine as db
 
 
 class Role(RoleMixin, db.EmbeddedDocument):
+    """MongoDB role model for managing resource access."""
     user_id = db.StringField(max_length=16)
     name = db.StringField()
 
@@ -18,6 +18,7 @@ class Role(RoleMixin, db.EmbeddedDocument):
 
 
 class User(db.Document, UserMixin):
+    """MongoDB user model."""
 
     meta = { 'collection': 'users',
              'allow_inheritance': True }
@@ -36,11 +37,16 @@ class User(db.Document, UserMixin):
     def __repr__(self):
         return "<User '%s'>" % (self.email,)
 
+# WTForms enables some convenient functionality with forms.
 UserForm = model_form(User)
 
 
 class AnonymousUser(AnonymousUser):
-    """Keeping anonymous user feature parity."""
+    """Anonymous user model.
+
+    This model should be used for extending functionality on unauthenticated
+    users.
+    """
 
     def is_admin(self):
         return False
@@ -48,17 +54,5 @@ class AnonymousUser(AnonymousUser):
     def to_json(self):
         return {}
 
-    @property
-    def user_id(self):
-        return self.get_id()
-
     def is_anonymous(self):
         return True
-
-    @property
-    def temporary(self):
-        return False
-
-    @property
-    def username(self):
-        return ''
