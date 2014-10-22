@@ -1,23 +1,27 @@
 # -*- coding: utf-8 -*-
+"""The core module initializes flask plugins and extensions.
 
+The declarations found in this module are not bound to any particular Flask
+app by default. The correct way to use these is to perform init_app's after
+instantiating a new flask application.
+"""
 
-from flask_principal import Principal
+from flask_cache import Cache
+from flask.ctx import AppContext
 from flask.globals import _app_ctx_stack
 from flask_login import LoginManager
+from flask_mongoengine import MongoEngine
+from flask_principal import Principal
 from flask_redis import Redis
 from flask_security import Security
-from flask_wtf.csrf import CsrfProtect
-from flask_cache import Cache
-
-from .smtphandler import EmailErrorHandler
-from .flask_errors import ErrorHandler
-from .flask_ordrin import Ordrin
 from flask_socketio import SocketIO
-
-from flask.ctx import AppContext
+from flask_wtf.csrf import CsrfProtect
 from functools import update_wrapper
 
-from flask_mongoengine import MongoEngine
+from .flask_errors import ErrorHandler
+from .flask_ordrin import Ordrin
+from .smtphandler import EmailErrorHandler
+
 
 # Ordr.in API using test servers for now.
 ordrin_api = Ordrin()
