@@ -1,12 +1,21 @@
 # -*- coding: utf-8 -*-
 
-import logging
-from datetime import timedelta
 import os
+import logging
 
+from datetime import timedelta
+
+# Debug options.
 DEBUG = True
-SECRET_KEY = 'not_so_secret'
 TRAP_HTTP_EXCEPTIONS = False
+DEBUG_TB_PROFILER_ENABLED = False
+LOG_LEVEL = logging.DEBUG
+
+# TODO: Should this key be set by an env variable?
+SECRET_KEY = 'not_so_secret'
+
+# Switch for using compiled JS in base template.
+USE_COMPILED_JS = False
 
 # API Keys
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
@@ -24,8 +33,6 @@ SESSION_COOKIE_NAME = 'sil'
 SESSION_PROTECTION = None
 PERMANENT_SESSION_LIFETIME = timedelta(31)
 
-DEBUG_TB_PROFILER_ENABLED = False
-
 # Flask-Cache
 CACHE_ENABLED = True
 CACHE_TYPE = 'redis'
@@ -39,11 +46,10 @@ MONGODB_PASSWORD = os.getenv('MONGO_PASSWORD')
 MONGODB_HOST = os.getenv('MONGO_HOST')
 MONGODB_PORT = os.getenv('MONGO_PORT')
 
-LOG_LEVEL = logging.DEBUG
-
 WTF_CSRF_ENABLED = False
 WTF_CSRF_SSL_STRICT = False
 
+# Email settings
 SMTP_FROM = ''
 SMTP_PORT = 465
 SMTP_FROM = ''
@@ -55,13 +61,3 @@ SMTP_USERNAME = ""
 ENABLE_ERROR_EMAIL = False
 ERROR_EMAIL_SUBJECT = ''
 ERROR_EMAIL_ADDRESS = ['']
-
-ADMIN_ROLE = 'group:admin'
-
-HTTP_MAX_AGE = 600
-
-JS_FILE = 'dev.js'
-CSS_FILE = 'dev.css'
-
-USE_COMPILED_JS = False
-REDIS_SOCKETIO_CHANNEL = 'socketio'
