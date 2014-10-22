@@ -10,6 +10,7 @@ TRAP_HTTP_EXCEPTIONS = False
 
 # API Keys
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
+ORDRIN_API_KEY = os.getenv('ORDRIN_API_KEY')
 
 # Redis
 REDIS_URL = "redis://127.0.0.1:6379/0"
@@ -31,6 +32,12 @@ CACHE_TYPE = 'redis'
 CACHE_DEFAULT_TIMEOUT = 30 * 24 * 3600
 CACHE_REDIS_DB = 0
 
+# Flask-MongoEngine
+MONGODB_DB = os.getenv('MONGO_DATABASE')
+MONGODB_USERNAME = os.getenv('MONGO_USERNAME')
+MONGODB_PASSWORD = os.getenv('MONGO_PASSWORD')
+MONGODB_HOST = os.getenv('MONGO_HOST')
+MONGODB_PORT = os.getenv('MONGO_PORT')
 
 LOG_LEVEL = logging.DEBUG
 

@@ -16,7 +16,7 @@ from simplekv.memory.redisstore import RedisStore
 
 from .core import (csrf, login_manager, principals,
                    security, redis, email_errors, mongo_engine,
-                   cache, error_handler)
+                   cache, error_handler, ordrin_api)
 from .silently_flask import SilentlyFlask
 from .middleware import HTTPMethodOverrideMiddleware
 from .users.models import AnonymousUser, User, Role
@@ -29,7 +29,7 @@ class RegexConverter(BaseConverter):
         self.regex = items[0]
 
 
-def create_app(package_name, settings_override=None, static_url_path=None):
+def create_app(package_name, static_url_path=None, settings_override=None):
     """Creates a configured Flask instance.
 
     :param package_name: application package name
@@ -46,7 +46,8 @@ def create_app(package_name, settings_override=None, static_url_path=None):
     app.config.from_object('silently.config')
 
     # Override config where specified.
-    app.config.from_object(settings_override)
+    if settings_override:
+        app.config.update(**settings_override)
 
     # Let's use a regex converter for more power.
     app.url_map.converters['regex'] = RegexConverter
@@ -74,14 +75,14 @@ def create_app(package_name, settings_override=None, static_url_path=None):
     store = RedisStore(redis)
     KVSessionExtension().init_app(app, session_kvstore=store)
 
-    # Initialize flask_principal for resource access control.
-    principals.init_app(app)
-
     # Initialize flask_login manager.
     login_manager.init_app(app)
 
     # Set a custom anonymous object.
     login_manager.anonymous_user = AnonymousUser
+
+    # Initialize flask_principal for resource access control.
+    principals.init_app(app)
 
     # There are lots of legacy proxy servers in the wild that do not allow
     # certain methods like PATCH. To overcome this it is necessary to specify
@@ -105,6 +106,9 @@ def create_app(package_name, settings_override=None, static_url_path=None):
 
     # Initialize Error Handler
     error_handler.init_app(app)
+
+    # Initialize the ordrin API.
+    ordrin_api.init_app(app)
 
     return app
 

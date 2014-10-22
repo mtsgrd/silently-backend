@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+
 from flask_principal import Principal
 from flask.globals import _app_ctx_stack
 from flask_login import LoginManager
@@ -8,9 +9,9 @@ from flask_security import Security
 from flask_wtf.csrf import CsrfProtect
 from flask_cache import Cache
 
-from .redis_loop import SocketIoRedisLoop
 from .smtphandler import EmailErrorHandler
 from .flask_errors import ErrorHandler
+from .flask_ordrin import Ordrin
 from flask_socketio import SocketIO
 
 from flask.ctx import AppContext
@@ -18,6 +19,8 @@ from functools import update_wrapper
 
 from flask_mongoengine import MongoEngine
 
+# Ordr.in API using test servers for now.
+ordrin_api = Ordrin()
 
 # Email when server errors out.
 email_errors = EmailErrorHandler()
@@ -33,9 +36,6 @@ cache = Cache()
 
 # Redis general.
 redis = Redis()
-
-# Redis gevent loop for subscriptions.
-redis_loop = SocketIoRedisLoop()
 
 socketio = SocketIO()
 

@@ -6,8 +6,8 @@ import simplejson as json
 from .. import factory
 from .html import bp as html_bp
 
-#from .html import bp as html_bp
-#from .auth import bp as auth_bp
+from .html import bp as html_bp
+from .auth import bp as auth_bp
 
 def xml(data):
     if data:
@@ -23,14 +23,14 @@ def create_app(settings_override=None,
                static_url_path=None):
     """Returns the Overholt API application instance"""
 
-    app = factory.create_app(__name__, settings_override,
+    app = factory.create_app(__name__, settings_override=settings_override,
          static_url_path=static_url_path)
 
     app.register_blueprint(html_bp)
-    #app.register_blueprint(auth_bp)
+    app.register_blueprint(auth_bp)
 
-    # Register custom error handlers
-    #toolbar = DebugToolbarExtension(app)
+    # Show debug toolbar.
+    # toolbar = DebugToolbarExtension(app)
 
     @app.context_processor
     def template_data():

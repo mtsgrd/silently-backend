@@ -4,40 +4,34 @@ from flask_principal import (identity_changed, identity_loaded, UserNeed,
 from flask import request
 from flask_security  import current_user
 from datetime import datetime
+from users.models import User
 
 @login_manager.user_loader
 def load_user(user_id):
     """Flask security loads the user before flask login. See the flask security
     AWSDataStore.
     """
-    return None #users.get(user_id)
+    return User.objects(id=user_id).first_or_404()
 
 @principals.identity_loader
 def load_identity_from_weird_usecase():
     if current_user.is_anonymous():
         return AnonymousIdentity()
     else:
-        return Identity(current_user.user_id)
+        return Identity(current_user.get_id())
 
 def init_app(app):
     """Initializing app specifc signal handlers."""
 
-    # TODO: Is this daisy chaining correct?
+    # Daisy chaining these since we want to add needs regardless of where
+    # in the request lifetime a user authenticates.
     @identity_loaded.connect_via(app)
     @identity_changed.connect_via(app)
     def on_identity_loaded(sender, identity):
         identity.user = current_user
 
-        # Add the UserNeed to the identity
-        if hasattr(identity.user, 'user_id'):
-            user_need = UserNeed(current_user.user_id)
-            identity.provides.add(user_need)
-
-        # Assuming the User model has a list of roles, update the
-        # identity with the roles that the user provides
-        if hasattr(identity.user, 'roles'):
-            for role in current_user.roles:
-                identity.provides.add(RoleNeed(role.name))
+        if isinstance(current_user, User):
+            identity.provides.add(UserNeed(current_user.email))
 
     @app.after_request
     def _nocache(response):

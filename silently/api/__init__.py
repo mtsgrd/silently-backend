@@ -1,40 +1,39 @@
 # -*- coding: utf-8 -*-
 
 from .. import factory, rooms
-from ..core import socketio, redis, redis_loop
+from ..core import socketio
 from flask import request, current_app
-from flask.ext.socketio import emit
-from routing import socket_route
+from flask_socketio import emit
+from ..routing import socket_route
 from flask_login import current_user
+from .ordrin import get_restaurants, get_details
 
-def create_app(settings_override=None, register_blueprints=True):
+#from .ordrin import bp as ordrin_bp
+
+def create_app(static_url_path=None, settings_override=None):
     """Returns the Overholt API application instance"""
 
-    app = factory.create_app(__name__, __path__, settings_override)
-    #app.register_blueprint([imported_bp_name])
+    app = factory.create_app(__name__, static_url_path=static_url_path,
+            settings_override=settings_override)
+    #app.register_blueprint([ordrin_bp])
     socketio.init_app(app)
-    redis.init_app(app)
-
-    channel = app.config['REDIS_SOCKETIO_CHANNEL']
-    redis_loop.init_app(app, redis=redis, socketio=socketio)
-    redis_loop.subscribe(channel)
-    redis_loop.spawn_loop()
     return app
 
-
 @socket_route('connect')
-def connect(self):
+def connect():
     current_app.logger.info('Connected as: %s', current_user.user_id)
 
-@socket_route('disconnect')
-def disconnect(self):
+@socketio.on('disconnect', namespace='/default')
+def disconnect():
     current_app.logger.info('Disconnected!')
-    if not current_user.is_anonymous():
-        redis.publish(current_user.user_id, 'KILL')
 
-@socket_route('join_room')
-def join(self, room):
-    rooms.join(room)
+@socket_route('restaurant_list')
+def list_restaurants(address):
+    restaurants = get_restaurants(address)
+    emit('restaurant_list', restaurants)
+    #for restaurant in restaurants:
+    #    details = get_details(restaurant['id'])
+    #    emit('restaurant_details', details)
 
 @socket_route('leave_room')
 def leave(self, room):
